@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Fetching full Git history..."
+      - git fetch --unshallow || echo "Already full history"
+
+  build:
+    commands:
+      - echo "Detecting changed Lambda functions..."
+      - |
+        CHANGED_FUNCTIONS=$(git diff --name-only HEAD~1 HEAD | grep '^lambda-functions/.*/src/' | awk -F'/' '{print $2}' | sort -u)
+        echo "Changed functions: $CHANGED_FUNCTIONS"
+
+        for function in $CHANGED_FUNCTIONS; do
+          FUNCTION_DIR="lambda-functions/$function/src"
+          if [[ -d "$FUNCTION_DIR" ]]; then
+            echo "Packaging and deploying $function..."
+            cd $FUNCTION_DIR
+            zip -r ../../$function.zip index.py  # Package only index.py
+            aws lambda update-function-code --function-name $function --zip-file fileb://../../$function.zip
+            cd - > /dev/null
+          fi
+        done
+
+  post_build:
+    commands:
+      - echo "Deployment completed!"
