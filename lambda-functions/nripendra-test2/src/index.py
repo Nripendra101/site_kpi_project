@@ -12,7 +12,7 @@ def lambda_handler(event, context):
         dict: A response with status code and a greeting message.
     """
     name = event.get("name", "User")
-    message = f"Hello, {name}! Welcome to AWS Lambda."
+    message = f"Hello, {name}! Welcome to AWS Lambda. and this is a test lambda function  nripendra-test2 by Nripendra."
 
     return {
         "statusCode": 200,
