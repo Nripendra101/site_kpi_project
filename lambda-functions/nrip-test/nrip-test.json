@@ -1,5 +1,5 @@
 {
-    "FunctionName": "function1",
+    "FunctionName": "nrip-test",
     "Runtime": "python3.11",
     "Handler": "index.handler",
     "MemorySize": 128,

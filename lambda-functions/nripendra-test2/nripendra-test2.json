@@ -1,0 +1,7 @@
+{
+    "FunctionName": "nripendra-test2",
+    "Runtime": "python3.11",
+    "Handler": "index.handler",
+    "MemorySize": 128,
+    "Timeout": 15
+}
