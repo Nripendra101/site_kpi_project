@@ -34,7 +34,7 @@ def generate_buildspec(changed_files):
         for lambda_function_dir in lambda_function_dirs:
             function_name = os.path.basename(os.path.dirname(lambda_function_dir))
             buildspec["phases"]["build"]["commands"].extend([
-                f"echo 'Deploying {function_name} Lambda Function'",
+                f"echo '🚀 Deploying {function_name} Lambda Function'",
                 f"cd {lambda_function_dir}",
                 f"zip {function_name}.zip index.py",
                 f"aws lambda update-function-code --function-name {function_name} --zip-file fileb://{function_name}.zip",
@@ -43,12 +43,16 @@ def generate_buildspec(changed_files):
             ])
     else:
         # Create a dummy buildspec to prevent CodeBuild failure
-        buildspec["phases"]["build"]["commands"].append("echo 'No Lambda function changes detected.'")
+        buildspec["phases"]["build"]["commands"].append("echo '✅ No Lambda function changes detected.'")
 
     return json.dumps(buildspec, indent=2)
 
 if __name__ == "__main__":
     changed_files = sys.argv[1:]
     buildspec_content = generate_buildspec(changed_files)
+
+    # Save buildspec.yml in the repository root
     with open("buildspec.yml", "w") as f:
         f.write(buildspec_content)
+
+    print("✅ Successfully generated buildspec.yml")
